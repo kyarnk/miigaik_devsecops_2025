@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dedushka-deployment
+  namespace: devsec
+  labels:
+    app: devopsapp-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devopsapp-2
+  template:
+    metadata:
+      labels:
+        app: devopsapp-2
+    spec:
+      containers:
+      - name: devops-app-dedushka
+        image: docker.io/immo1337/dedushka:latest
+        ports:
+        - containerPort: 5000

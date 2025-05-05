@@ -1,0 +1,40 @@
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+
+  service:
+    type: NodePort
+    nodePort: 30090  # Пример: порт для доступа к Prometheus через ноду
+
+alertmanager:
+  enabled: true
+  service:
+    type: NodePort
+    nodePort: 30093
+
+grafana:
+  enabled: true
+  adminPassword: "admin"  # Задай свой пароль
+
+  service:
+    type: NodePort
+    nodePort: 30080
+
+  ingress:
+    enabled: false  # Включи, если у тебя есть Ingress Controller
+
+  # Подгружаем дашборды автоматически
+  defaultDashboardsEnabled: true
+
+  grafana.ini:
+    server:
+      root_url: http://100.66.161.237/grafana
+      serve_from_sub_path: true
+
+nodeExporter:
+  enabled: true
+
+kube-state-metrics:
+  enabled: true

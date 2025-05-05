@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devopsapp-deployment
+  namespace: devsec
+  labels:
+    app: devopsapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devopsapp
+  template:
+    metadata:
+      labels:
+        app: devopsapp
+    spec:
+      containers:
+      - name: devops-app
+        image: docker.io/zhuzha/devops-app:latest
+        ports:
+        - containerPort: 8080

@@ -1,0 +1,48 @@
+# Loki Settings
+loki:
+  enabled: true
+  replicaCount: 1
+  config:
+    # Настройки Loki, чтобы использовать стандартный конфиг
+    server:
+      http_listen_port: 3100
+    # Указываем место для хранения логов
+    storage_config:
+      boltdb_shipper:
+        active_index_directory: /data/loki/index
+        cache_location: /data/loki/cache
+        shared_store: filesystem
+      filesystem:
+        directory: /data/loki/chunks
+    # Настройка для компоновки журналов в сжатые файлы
+    schema_config:
+      configs:
+        - from: 2020-10-22
+          store: boltdb_shipper
+          object_store: filesystem
+          schema: v11
+          index:
+            prefix: loki_index_
+            period: 24h
+
+# Promtail Settings
+promtail:
+  enabled: true
+  config:
+    server:
+      http_listen_port: 9080
+    clients:
+      - url: http://loki.monitoring.svc.cluster.local:3100/api/prom/push
+    positions:
+      filename: /tmp/positions.yaml
+    scrape_configs:
+      - job_name: kubernetes-pods
+        pipeline_stages:
+          - docker: {}
+        static_configs:
+          - targets:
+              - localhost
+            labels:
+              job: kubernetes-pods
+              __path__: /var/log/pods/*/*.log
+

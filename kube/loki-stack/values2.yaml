@@ -1,0 +1,37 @@
+loki:
+  enabled: true  # Включаем Loki
+  config:
+    auth_enabled: false  # Отключаем аутентификацию для Loki
+    server:
+      http_listen_port: 3100  # Порт для HTTP сервера Loki
+
+    # Настройки для хранения данных в Loki
+    storage_config:
+      boltdb_shipper:
+        active_index_directory: /data/loki/index
+        cache_location: /data/loki/cache
+        shared_store: filesystem
+      filesystem:
+        directory: /data/loki/chunks
+
+    # Удалим поле positions, оно в новой версии не поддерживается как в вашем примере
+    # clients: - это настройка для Promtail, а не Loki
+
+promtail:
+  enabled: true  # Включаем Promtail
+
+  config:
+    server:
+      http_listen_port: 3101  # Порт для Promtail (обработчик HTTP запросов)
+    
+    clients:
+      - url: "http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push"  # URL для отправки логов в Loki
+
+    scrape_configs:
+      - job_name: kubernetes-pods
+        static_configs:
+          - targets:
+              - localhost
+            labels:
+              job: varlogs
+              __path__: /var/log/pods/*/*/*.log  # Путь к логам всех подов в Kubernetes
