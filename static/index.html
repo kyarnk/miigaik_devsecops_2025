@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+</head>
+<body>
+    <h1>Task Manager API</h1>
+    <h2>Test API Calls</h2>
+    <form id="apiRequestForm">
+        <label for="url">API Endpoint:</label>
+        <input type="text" id="url" name="url" value="/tasks"><br><br>
+        <label for="data">Data (JSON):</label><br>
+        <textarea id="data" name="data" rows="5" cols="50"></textarea><br><br>
+        <button type="submit">Send Request</button>
+    </form>
+
+    <h3>Response:</h3>
+    <pre id="response"></pre>
+
+    <h3>API Endpoint Examples</h3>
+
+    <h4>1. Register User</h4>
+    <p><strong>POST /user/register</strong></p>
+    <p>Data:</p>
+    <pre>
+{
+    "username": "john_doe",
+    "password": "password123"
+}
+    </pre>
+
+    <h4>2. Login User</h4>
+    <p><strong>POST /user/login</strong></p>
+    <p>Data:</p>
+    <pre>
+{
+    "username": "john_doe",
+    "password": "password123"
+}
+    </pre>
+
+    <h4>3. Logout User</h4>
+    <p><strong>PUT /user/logout</strong></p>
+    <p>No data required in body for this endpoint.</p>
+
+    <h4>4. Delete User</h4>
+    <p><strong>DELETE /user/delete</strong></p>
+    <p>No data required in body for this endpoint. Token should be sent in Authorization header as Bearer Token.</p>
+
+    <h4>5. Get a Task by ID</h4>
+    <p><strong>GET /tasks/{id}</strong></p>
+    <p>No data required in body for this endpoint.</p>
+
+    <h4>6. Get All Tasks</h4>
+    <p><strong>GET /tasks/</strong></p>
+    <p>No data required in body for this endpoint.</p>
+
+    <h4>7. Create Task</h4>
+    <p><strong>POST /tasks/create</strong></p>
+    <p>Data:</p>
+    <pre>
+{
+    "title": "Buy groceries",
+    "done": false,
+    "user_id": 1
+}
+    </pre>
+
+    <h4>8. Bulk Upload Tasks</h4>
+    <p><strong>POST /tasks/bulkupload</strong></p>
+    <p>Data:</p>
+    <pre>
+[
+    {
+        "title": "Buy groceries",
+        "done": false,
+        "user_id": 1
+    },
+    {
+        "title": "Walk the dog",
+        "done": false,
+        "user_id": 1
+    }
+]
+    </pre>
+
+    <h4>9. Update Task</h4>
+    <p><strong>PUT /tasks/update/{id}</strong></p>
+    <p>Data:</p>
+    <pre>
+{
+    "title": "Buy milk",
+    "done": true
+}
+    </pre>
+
+    <h4>10. Delete Task</h4>
+    <p><strong>DELETE /tasks/delete/{id}</strong></p>
+    <p>No data required in body for this endpoint.</p>
+
+    <script>
+        document.getElementById('apiRequestForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const url = document.getElementById('url').value;
+            const data = document.getElementById('data').value;
+
+            const response = await fetch(url, {
+                method: data ? 'POST' : 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: data ? JSON.stringify(JSON.parse(data)) : null,
+            });
+
+            const responseText = await response.text();
+            document.getElementById('response').textContent = responseText;
+        });
+    </script>
+</body>
+</html>
