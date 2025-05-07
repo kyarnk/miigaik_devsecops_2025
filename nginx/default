@@ -106,8 +106,8 @@ server {
         }
 
        location /dedushka/ {
-                rewrite ^/dedushka(/.*)$ $1 break;  # Убираем /dedushka из запроса
-                proxy_pass http://dedushka/;  # Убедитесь, что здесь есть слэш в конце
+                rewrite ^/dedushka(/.*)$ $1 break;
+                proxy_pass http://dedushka/;
                 proxy_redirect off;
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
